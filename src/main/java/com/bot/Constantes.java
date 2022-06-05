@@ -10,13 +10,14 @@ public class Constantes {
 		protected static String BOT_FUNCIONALIDADES = new StringBuilder()
 													.append(TAB).append("/tempo \n")
 													.append(TAB).append("/conselho \n")
+													.append(TAB).append("/calcula_sua_idade \"Passe sua data de nascimento padrão dd/MM/yyyy\"  \n")
 													.append(TAB).append("/piada_Chuck_Norris \n")
-													.append(TAB).append("/ordenar \"Passe os números que você deseja ordenar \" \n")
+													.append(TAB).append("/ordenar \"Passe os números que você deseja ordenar\" \n")
 													.toString();
 		
 		protected static final String BOT_ORDENAR_FUNC_ERRO = "Desculpe talvez minha funcionalidade de ordenação não esteja funcionando, certifique-se de que você tenha passado na frente do comando /ordenar apenas números com um espaço em branco entre cada número. Depois tente novamente . ";
 		protected static final String BOT_PIADA_CHUCK_FUNC_ERRO = "Desculpe talvez minha funcionalidade de piadas do Chuck Norris não esteja funcionando. Tente novamente mais tarde. ";
 		protected static final String BOT_PIADA_CONSELHO_FUNC_ERRO = "Desculpe talvez minha funcionalidade de conselho não esteja funcionando. Tente novamente mais tarde. ";
 		protected static final String BOT_PIADA_TEMPO_FUNC_ERRO = "Desculpe talvez minha funcionalidade de previsão do tempo não esteja funcionando. Tente novamente mais tarde. ";
-		
+		protected static final String BOT_PIADA_IDADE_FUNC_ERRO = "Desculpe talvez minha funcionalidade de calculo de idadade do tempo não esteja funcionando. Tente novamente mais tarde. ";
 }

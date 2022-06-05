@@ -1,7 +1,13 @@
 package com.bot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,9 +57,9 @@ public class TelegramRespostas {
 		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PROBLEMA_GERAL));
 	}
 
-	protected static void telegramRespostaErroGeral(Update update, SendResponse sendResponse, TelegramBot bot) {
-		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PROBLEMA_GERAL));
-	}
+//	protected static void telegramRespostaErroGeral(Update update, SendResponse sendResponse, TelegramBot bot) {
+//		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PROBLEMA_GERAL));
+//	}
 
 	protected static void telegramRespostaOrdenar(Update update, SendResponse sendResponse, TelegramBot bot) {
 		String usuarioString = update.message().text().toLowerCase();
@@ -106,6 +112,23 @@ public class TelegramRespostas {
 		return resultado;
 
 	}
+	
+	protected static void telegramRespostaCaculoIdade(Update update, SendResponse sendResponse, TelegramBot bot) throws ParseException {
+		
+		String usuarioString = update.message().text().toLowerCase();
+		usuarioString = usuarioString.replace("/calcula_sua_idade", " ");
+		usuarioString = usuarioString.trim();
+		
+		Date birthday = new SimpleDateFormat("dd/MM/yyyy").parse(usuarioString);
+
+		LocalDate ldirthday = birthday.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		int years = Period.between(ldirthday, LocalDate.now()).getYears();
+
+		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Você tem " + years + " anos de idade"));
+		
+		
+	}
 
 	protected static void telegramRespostaPiadaChuckNorrisTradutor(Update update, ResponseEntity<ApiTranslateResponse> requestTradutorAPI, SendResponse sendResponse, TelegramBot bot) {
 
@@ -142,4 +165,5 @@ public class TelegramRespostas {
 				update.message().from().lastName());
 
 	}
+
 }

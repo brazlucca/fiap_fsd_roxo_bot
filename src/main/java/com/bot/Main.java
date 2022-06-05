@@ -100,7 +100,13 @@ public class Main {
 							ordenarFunction(update);
 							
 							logRespostaEnviada();
-
+							
+						} else if (commandLowerCase.startsWith("/calcula_sua_idade")) {
+								
+							idadeFunction(update);
+							
+							logRespostaEnviada();
+							
 						} else {
 							
 							sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_NAO_ENTENDI));
@@ -110,13 +116,12 @@ public class Main {
 						}
 						
 						
-						
 					} catch (Exception e) {
 						TelegramRespostas.telegramRespostaErroGeral(update, e, sendResponse, bot);
 					}
 
 				} else {
-					TelegramRespostas.telegramRespostaErroGeral(update, sendResponse, bot);
+//					TelegramRespostas.telegramRespostaErroGeral(update, sendResponse, bot);
 				}
 
 			}
@@ -125,15 +130,6 @@ public class Main {
 	}
 	
 	
-	private static void logRespostaEnviada() {
-		
-		//RESPOSTA ACAO - Verificacao de mensagem enviada com sucesso.
-		System.out.println("LOG - Mensagem Enviada? " + sendResponse.isOk());
-		System.out.println("--------------");
-		
-	}
-
-
 	private static void enviandoMensagemDigitando(TelegramBot bot, Update update) {
 		
 		// CHAT ACAO - Envio de "Escrevendo" antes de enviar a resposta.
@@ -144,7 +140,15 @@ public class Main {
 		
 	}
 
-
+	
+	private static void logRespostaEnviada() {
+		
+		//RESPOSTA ACAO - Verificacao de mensagem enviada com sucesso.
+		System.out.println("LOG - Mensagem Enviada? " + sendResponse.isOk());
+		System.out.println("--------------");
+		
+	}
+	
 	private static void logRecebendoMensagem(Update update) {
 		
 		// USUARIO - Recebendo mensagem do usuário.
@@ -154,6 +158,24 @@ public class Main {
 
 
 	//FUNCIONALIDADES
+	
+	//Funcionalidade de idade
+	private static void idadeFunction(Update update) {
+		try {
+			
+			TelegramRespostas.telegramRespostaCaculoIdade(update, sendResponse, bot);
+			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
+			
+		} catch (Exception e) {
+			
+			System.out.println("LOG - ERRO FUNCIONALIDADE IDADE");
+			System.out.println(e);
+			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PIADA_IDADE_FUNC_ERRO));
+			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
+		}
+		
+		
+	}
 
 	//Funcionalidade de ordenação
 	private static void ordenarFunction(Update update) {
