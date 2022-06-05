@@ -2,7 +2,7 @@
 
 Bem vindo ao bot do telegram em Java.
 
-Para uso do bot, deve-se primeiro cadastrar um novo bot para seu teste dentro do própio Telegram usando o @BotFather que é o criador de bots do Telegram, no final de sua criaão ele enviará a sua key que serve para controlar e rodar sua aplicação/bot.
+Para uso do bot, deve-se primeiro cadastrar um novo bot para seu teste dentro do própio Telegram usando o @BotFather que é o criador de bots do Telegram, no final de sua criação ele enviará a sua key que serve para controlar e rodar sua aplicação/bot.
 
 Fazer o clone do projeto e rodar a aplicação Main preenchendo as variáveis de ambiente:
 
