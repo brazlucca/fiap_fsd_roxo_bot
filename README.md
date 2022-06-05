@@ -38,7 +38,10 @@ O bot tem as seguintes funcionalidades:
       
     /conselho 
       Retorna um conselho em inglês e em português e a API de tradução estiver ativa e disponível.
-      
+    
+    /calcula_sua_idade "Passe sua data de nascimento padrão dd/MM/yyyy" 
+      Retorna a idade do usuário, baseado no padrão acima.  
+    
     /piada_Chuck_Norris 
       Retorna uma piada do Chuck Norris em inglês e em português e a API de tradução estiver ativa e disponível.
 
