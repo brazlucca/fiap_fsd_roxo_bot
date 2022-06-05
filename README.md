@@ -6,10 +6,10 @@ Para uso do bot, deve-se primeiro cadastrar um novo bot para seu teste dentro do
 
 Fazer o clone do projeto e rodar a aplicação Main preenchendo as variáveis de ambiente:
 
-#variaveis de ambiente
-token_telegram={token_telegram}
-token_rapid_key={token_rapid_key}
-token_weather={token_weather}
+    #variaveis de ambiente
+        token_telegram={token_telegram}
+        token_rapid_key={token_rapid_key}
+        token_weather={token_weather}
 
 A variável {token_telegram} é o token que foi gerado pelo BotFather para controlar e rodar seu bot.
 
