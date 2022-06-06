@@ -24,7 +24,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 
 public class TelegramRespostas {
 
-	protected static void telegramRespostaTempo(Update update, ResponseEntity<ApiWeatherResponse> requestTempoAPI, SendResponse sendResponse, TelegramBot bot) {
+	public static void telegramRespostaTempo(Update update, ResponseEntity<ApiWeatherResponse> requestTempoAPI, SendResponse sendResponse, TelegramBot bot) {
 		ApiWeatherResponse body = requestTempoAPI.getBody();
 
 		String resultado = new StringBuilder().append("Previsão do tempo em: " + body.getResults().getCity())
@@ -50,18 +50,18 @@ public class TelegramRespostas {
 		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), resultadoAmanha));
 
 	}
-	
-	protected static void telegramRespostaErroGeral(Update update, Exception e, SendResponse sendResponse, TelegramBot bot) {
+
+	public static void telegramRespostaErroGeral(Update update, Exception e, SendResponse sendResponse, TelegramBot bot) {
 		System.out.println(e);
 		System.out.println("LOG - PROBLEMA GERAL NAS FUNCIONALIDADES");
 		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PROBLEMA_GERAL));
 	}
 
-//	protected static void telegramRespostaErroGeral(Update update, SendResponse sendResponse, TelegramBot bot) {
+//	public static void telegramRespostaErroGeral(Update update, SendResponse sendResponse, TelegramBot bot) {
 //		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PROBLEMA_GERAL));
 //	}
 
-	protected static void telegramRespostaOrdenar(Update update, SendResponse sendResponse, TelegramBot bot) {
+	public static void telegramRespostaOrdenar(Update update, SendResponse sendResponse, TelegramBot bot) {
 		String usuarioString = update.message().text().toLowerCase();
 		usuarioString = usuarioString.replace("/ordenar", " ");
 		usuarioString = usuarioString.trim();
@@ -73,15 +73,15 @@ public class TelegramRespostas {
 				new SendMessage(update.message().chat().id(), "Sua lista ordenada é " + listaIntegerParaOrdenar));
 	}
 
-	protected static void telegramRespostaPadrao(Update update, SendResponse sendResponse, TelegramBot bot) {
+	public static void telegramRespostaPadrao(Update update, SendResponse sendResponse, TelegramBot bot) {
 		sendResponse = bot.execute(new SendMessage(update.message().chat().id(), "Bem vindo usuário " + nomeDoUsuario(update)
 				+ " ao BOT, para melhor experiência, recomendamos o uso desse bot na versão mobile ao invés da desktop."));
 		sendResponse = bot.execute(new SendMessage(update.message().chat().id(),"Escolha uma das opções: \n" + Constantes.BOT_FUNCIONALIDADES));
 	}
 
-	
 
-	protected static String telegramRespostaConselho(Update update, ResponseEntity<ApiAdviceResponse> requestConselhoAPI, SendResponse sendResponse, TelegramBot bot) {
+
+	public static String telegramRespostaConselho(Update update, ResponseEntity<ApiAdviceResponse> requestConselhoAPI, SendResponse sendResponse, TelegramBot bot) {
 		ApiAdviceResponse body = requestConselhoAPI.getBody();
 
 		String resultado = new StringBuilder().append("Conselho do dia em inglês: " + body.getSlip().getAdvice())
@@ -93,7 +93,7 @@ public class TelegramRespostas {
 
 	}
 
-	protected static void telegramRespostaConselhoTradutor(Update update, ResponseEntity<ApiTranslateResponse> requestConselhoTradutorAPI, SendResponse sendResponse, TelegramBot bot) {
+	public static void telegramRespostaConselhoTradutor(Update update, ResponseEntity<ApiTranslateResponse> requestConselhoTradutorAPI, SendResponse sendResponse, TelegramBot bot) {
 		ApiTranslateResponse body = requestConselhoTradutorAPI.getBody();
 
 		String resultado = new StringBuilder().append(body.getResult().getPt()).toString();
@@ -102,7 +102,7 @@ public class TelegramRespostas {
 
 	}
 
-	protected static String telegramRespostaPiadaChuckNorris(Update update, ResponseEntity<ApiJokeChuckNorrisResponse> requestJokeChuckNorrisAPI, SendResponse sendResponse, TelegramBot bot) {
+	public static String telegramRespostaPiadaChuckNorris(Update update, ResponseEntity<ApiJokeChuckNorrisResponse> requestJokeChuckNorrisAPI, SendResponse sendResponse, TelegramBot bot) {
 		ApiJokeChuckNorrisResponse body = requestJokeChuckNorrisAPI.getBody();
 
 		String resultado = new StringBuilder().append("Piada do Chuck Norris em inglês: " + body.getValue()).toString();
@@ -112,8 +112,8 @@ public class TelegramRespostas {
 		return resultado;
 
 	}
-	
-	protected static void telegramRespostaCaculoIdade(Update update, SendResponse sendResponse, TelegramBot bot) throws ParseException {
+
+	public static void telegramRespostaCaculoIdade(Update update, SendResponse sendResponse, TelegramBot bot) throws ParseException {
 		
 		String usuarioString = update.message().text().toLowerCase();
 		usuarioString = usuarioString.replace("/calcula_sua_idade", " ");
@@ -130,7 +130,7 @@ public class TelegramRespostas {
 		
 	}
 
-	protected static void telegramRespostaPiadaChuckNorrisTradutor(Update update, ResponseEntity<ApiTranslateResponse> requestTradutorAPI, SendResponse sendResponse, TelegramBot bot) {
+	public static void telegramRespostaPiadaChuckNorrisTradutor(Update update, ResponseEntity<ApiTranslateResponse> requestTradutorAPI, SendResponse sendResponse, TelegramBot bot) {
 
 		ApiTranslateResponse body = requestTradutorAPI.getBody();
 
@@ -141,7 +141,7 @@ public class TelegramRespostas {
 	}
 
 	// METODOS AUXILIARES
-	protected static String concatenaNomeDoUsuario(String idUser, String... names) {
+	public static String concatenaNomeDoUsuario(String idUser, String... names) {
 
 		String user = "";
 
@@ -159,7 +159,7 @@ public class TelegramRespostas {
 
 	}
 
-	protected static String nomeDoUsuario(Update update) {
+	public static String nomeDoUsuario(Update update) {
 
 		return concatenaNomeDoUsuario(update.message().from().id().toString(), update.message().from().firstName(),
 				update.message().from().lastName());

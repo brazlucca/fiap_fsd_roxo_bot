@@ -1,14 +1,8 @@
 package com.bot;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.ResponseEntity;
-
-import com.bot.dto.ApiAdviceResponse;
-import com.bot.dto.ApiJokeChuckNorrisResponse;
-import com.bot.dto.ApiTranslateResponse;
-import com.bot.dto.ApiWeatherResponse;
+import com.bot.dto.*;
+import com.bot.dto.commandos.Comando;
+import com.bot.dto.commandos.ComandoEnum;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ChatAction;
@@ -18,6 +12,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 	
@@ -26,8 +24,8 @@ public class Main {
 	
 	//Tokens
 	private static String token_telegram = env.get("token_telegram");
-	private static String token_rapid_key = env.get("token_rapid_key");
-	private static String token_weather = env.get("token_weather");
+//	private static String token_rapid_key = env.get("token_rapid_key");
+//	private static String token_weather = env.get("token_weather");
 	
 	// Criacao do objeto telegram bot com as informacoes de acesso.
 	private static TelegramBot bot = new TelegramBot(token_telegram);
@@ -71,51 +69,11 @@ public class Main {
 					enviandoMensagemDigitando(bot, update);
 
 					try {
+
 						String commandLowerCase = update.message().text().toLowerCase();
-						
-						if (commandLowerCase.equals("/start")) {
-							
-							TelegramRespostas.telegramRespostaPadrao(update, sendResponse, bot);
-							
-						} else if (commandLowerCase.equals("/tempo")) {
-							
-							tempoFunction(update);
-							
-							logRespostaEnviada();
+						Comando comando = ComandoEnum.fromString(commandLowerCase).retornaNovoComando();
+						comando.executaComando(update, sendResponse, bot);
 
-						} else if (commandLowerCase.equals("/conselho")) {
-							
-							conselhoFunction(update);
-							
-							logRespostaEnviada();
-
-						} else if (commandLowerCase.equals("/piada_Chuck_Norris".toLowerCase())) {
-							
-							piadaChuckNorrisFunction(update);
-							
-							logRespostaEnviada();
-
-						} else if (commandLowerCase.startsWith("/ordenar")) {
-							
-							ordenarFunction(update);
-							
-							logRespostaEnviada();
-							
-						} else if (commandLowerCase.startsWith("/calcula_sua_idade")) {
-								
-							idadeFunction(update);
-							
-							logRespostaEnviada();
-							
-						} else {
-							
-							sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_NAO_ENTENDI));
-							
-							logRespostaEnviada();
-
-						}
-						
-						
 					} catch (Exception e) {
 						TelegramRespostas.telegramRespostaErroGeral(update, e, sendResponse, bot);
 					}
@@ -128,8 +86,7 @@ public class Main {
 		}
 
 	}
-	
-	
+
 	private static void enviandoMensagemDigitando(TelegramBot bot, Update update) {
 		
 		// CHAT ACAO - Envio de "Escrevendo" antes de enviar a resposta.
@@ -140,7 +97,6 @@ public class Main {
 		
 	}
 
-	
 	private static void logRespostaEnviada() {
 		
 		//RESPOSTA ACAO - Verificacao de mensagem enviada com sucesso.
@@ -156,126 +112,4 @@ public class Main {
 		
 	}
 
-
-	//FUNCIONALIDADES
-	
-	//Funcionalidade de idade
-	private static void idadeFunction(Update update) {
-		try {
-			
-			TelegramRespostas.telegramRespostaCaculoIdade(update, sendResponse, bot);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-			
-		} catch (Exception e) {
-			
-			System.out.println("LOG - ERRO FUNCIONALIDADE IDADE");
-			System.out.println(e);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PIADA_IDADE_FUNC_ERRO));
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		}
-		
-		
-	}
-
-	//Funcionalidade de ordenação
-	private static void ordenarFunction(Update update) {
-		try {
-			TelegramRespostas.telegramRespostaOrdenar(update, sendResponse, bot);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		} catch (Exception e) {
-			System.out.println("LOG - ERRO FUNCIONALIDADE ORDENAR");
-			System.out.println(e);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_ORDENAR_FUNC_ERRO));
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		}
-			
-	}
-	
-	//Funcionalidade de piada do Chuck Norris
-	
-	//Existes dois try catchs pois a resposta vem em inglês, e caso ocorra um erro na api de tradução devido limite de uso
-	//será retornado apenas a piada do Chuck Norris em inglês.
-	private static void piadaChuckNorrisFunction(Update update) {
-		try {
-			
-			ResponseEntity<ApiJokeChuckNorrisResponse> requestJokeChuckNorrisAPI = APIs.requestJokeChuckNorrisAPI();
-			String telegramRespostaPiadaChuckNorris = TelegramRespostas.telegramRespostaPiadaChuckNorris(update,requestJokeChuckNorrisAPI, sendResponse, bot);
-			try {
-				
-				ResponseEntity<ApiTranslateResponse> requestTradutorAPI = APIs.requestTradutorAPI(telegramRespostaPiadaChuckNorris, token_rapid_key);
-				TelegramRespostas.telegramRespostaPiadaChuckNorrisTradutor(update, requestTradutorAPI, sendResponse, bot);
-				
-			} catch (Exception e) {
-				
-				System.out.println("LOG - ERRO FUNCIONALIDADE TRADUCAO PIADA_CHUCK_NORRIS");
-				System.out.println(e);
-			}
-			
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-			
-		} catch (Exception e) {
-			
-			System.out.println("LOG - ERRO FUNCIONALIDADE PIADA_CHUCK_NORRIS");
-			System.out.println(e);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PIADA_CHUCK_FUNC_ERRO));
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		}
-		
-		
-	}
-	
-	//Funcionalidade de conselho
-	
-	//Existes dois try catchs pois a resposta vem em inglês, e caso ocorra um erro na api de tradução devido limite de uso
-	//será retornado apenas o conselho em inglês.
-	private static void conselhoFunction(Update update) {
-		try {
-			
-			ResponseEntity<ApiAdviceResponse> requestConselhoAPI = APIs.requestConselhoAPI();
-			String telegramRespostaConselho = TelegramRespostas.telegramRespostaConselho(update, requestConselhoAPI, sendResponse, bot);
-			
-			try {
-				
-				ResponseEntity<ApiTranslateResponse> requestTradutorAPI = APIs.requestTradutorAPI(telegramRespostaConselho, token_rapid_key);
-				TelegramRespostas.telegramRespostaConselhoTradutor(update, requestTradutorAPI, sendResponse, bot);
-				
-			} catch (Exception e) {
-				
-				System.out.println("TELEGRAM - ERRO FUNCIONALIDADE TRADUCAO CONSELHO");
-				System.out.println(e);
-			}
-			
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-			
-		} catch (Exception e) {
-			
-			System.out.println("TELEGRAM - ERRO FUNCIONALIDADE CONSELHO");
-			System.out.println(e);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PIADA_CONSELHO_FUNC_ERRO));
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		}
-		
-		
-	}
-	
-	
-	//Funcionalidade de previsão do tempo
-	private static void tempoFunction(Update update) {
-		try {
-			
-			ResponseEntity<ApiWeatherResponse> requestTempoAPI = APIs.requestTempoAPI(token_weather);
-			TelegramRespostas.telegramRespostaTempo(update, requestTempoAPI, sendResponse, bot);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-			
-		} catch (Exception e) {
-			
-			System.out.println("TELEGRAM - ERRO FUNCIONALIDADE TEMPO");
-			System.out.println(e);
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_PIADA_TEMPO_FUNC_ERRO));
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(), Constantes.BOT_SE_QUISER + Constantes.BOT_FUNCIONALIDADES));
-		}
-		
-	}
-	
-	
 }

@@ -20,7 +20,7 @@ import com.bot.dto.ApiWeatherResponse;
 
 public class APIs {
 
-	protected static ResponseEntity<ApiTranslateResponse> requestTradutorAPI(String textoParaTraduzir, String token_rapid_key) {
+	public static ResponseEntity<ApiTranslateResponse> requestTradutorAPI(String textoParaTraduzir, String token_rapid_key) {
 		String urlTemplate = UriComponentsBuilder
 				.fromHttpUrl("https://google-unlimited-multi-translate.p.rapidapi.com/api_translate_unlimited.php")
 				.toUriString();
@@ -47,7 +47,7 @@ public class APIs {
 
 	}
 
-	protected static ResponseEntity<ApiAdviceResponse> requestConselhoAPI() {
+	public static ResponseEntity<ApiAdviceResponse> requestConselhoAPI() {
 		String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://api.adviceslip.com/advice").toUriString();
 		RestTemplate restTemplate = new RestTemplate();
 		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
@@ -58,7 +58,7 @@ public class APIs {
 		return restTemplate.exchange(urlTemplate, HttpMethod.GET, null, ApiAdviceResponse.class);
 	}
 
-	protected static ResponseEntity<ApiWeatherResponse> requestTempoAPI(String token_weather) {
+	public static ResponseEntity<ApiWeatherResponse> requestTempoAPI(String token_weather) {
 		String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://api.hgbrasil.com/weather")
 				.queryParam("key", token_weather).queryParam("city_name", "S�o Paulo").toUriString();
 		RestTemplate restTemplate = new RestTemplate();
@@ -66,8 +66,8 @@ public class APIs {
 		return restTemplate.exchange(urlTemplate, HttpMethod.GET, null, ApiWeatherResponse.class);
 
 	}
-	
-	protected static ResponseEntity<ApiJokeChuckNorrisResponse> requestJokeChuckNorrisAPI() {
+
+	public static ResponseEntity<ApiJokeChuckNorrisResponse> requestJokeChuckNorrisAPI() {
 		String urlTemplate = UriComponentsBuilder.fromHttpUrl("https://api.chucknorris.io/jokes/random")
 				.toUriString();
 		RestTemplate restTemplate = new RestTemplate();
